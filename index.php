@@ -1,16 +1,50 @@
+<?php
+// Set a cookie if not already set (expires in 1 hour)
+if (!isset($_COOKIE["username"])) {
+    setcookie("username", "GuestUser", time() + 3600);
+    $cookieMessage = "Cookie 'username' has been set.";
+} else {
+    $cookieMessage = "Cookie 'username' is set to: " . $_COOKIE["username"];
+}
+
+// Clear cookie if reset requested
+if (isset($_GET["reset"])) {
+    setcookie("username", "", time() - 3600); // Expire it
+    header("Location: index.php"); // Refresh without query param
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PHP Array Demo</title>
+    <title>PHP Array & Cookie Demo</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; background: #f0f4f8; }
         h2 { color: #2a6592; }
         pre { background: #fff; border: 1px solid #ccc; padding: 10px; }
+        .cookie-box { background: #fffbe0; padding: 10px; border: 1px solid #ccc; margin-bottom: 20px; }
+        a.button {
+            display: inline-block;
+            background: #e74c3c;
+            color: #fff;
+            padding: 8px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-<h1>PHP Array Demo</h1>
+<h1>PHP Array & Cookie Demo</h1>
+
+<div class="cookie-box">
+    <strong>Cookie Status:</strong><br>
+    <?php echo $cookieMessage; ?>
+    <br>
+    <a class="button" href="?reset=true">Reset Cookie</a>
+</div>
 
 <?php
 // Indexed array
@@ -43,7 +77,7 @@ echo "Keys: ";
 print_r($keys);
 echo "</pre>";
 
-// Merging arrays
+// Merged array
 $merged = array_merge($colors, $keys);
 
 echo "<h2>Merged Array (Colors + Keys)</h2>";
